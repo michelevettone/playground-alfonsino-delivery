@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { useIsFocused } from "@react-navigation/native";
-import { StyleSheet, View, Dimensions, Image, ActivityIndicator, FlatList, TouchableOpacity, Text } from 'react-native';
+import { StyleSheet, View, Dimensions, Image, FlatList, TouchableOpacity, Text } from 'react-native';
 import { Icon } from 'react-native-elements'
 import AsyncStorage from "@react-native-community/async-storage";
 import axios from "axios";

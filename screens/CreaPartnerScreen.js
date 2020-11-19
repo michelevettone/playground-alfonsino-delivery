@@ -26,7 +26,7 @@ export default function CreatePartnerScreen({ navigation: { navigate } }, props)
                     body: data,
                 }
             )
-                .then((response) => {response.json();})
+                .then((response) => { response.json(); })
                 .then((responseData) => {
                     console.log(responseData)
                     if (responseData !== "") {
@@ -52,15 +52,15 @@ export default function CreatePartnerScreen({ navigation: { navigate } }, props)
                 />
             </View>
             <View style={styles.buttonView}>
-                    <TouchableOpacity style={styles.loginButton}
-                        onPress={() => {
-                            createPartner();
-                            disableButton(true);
-                        }}
-                        disabled={isButtonDisabled}>
-                        <Text style={{ color: "white", fontSize: 12, fontWeight: "bold" }}>Crea</Text>
-                    </TouchableOpacity>
-                </View>
+                <TouchableOpacity style={styles.loginButton}
+                    onPress={() => {
+                        createPartner();
+                        disableButton(true);
+                    }}
+                    disabled={isButtonDisabled}>
+                    <Text style={{ color: "white", fontSize: 12, fontWeight: "bold" }}>Crea</Text>
+                </TouchableOpacity>
+            </View>
         </View>
     );
 }

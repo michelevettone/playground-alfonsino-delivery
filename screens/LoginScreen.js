@@ -1,13 +1,10 @@
-import React, { useState, useEffect } from "react";
-import { StyleSheet, View, Dimensions, Image, ActivityIndicator, TextInput, TouchableOpacity, Text } from 'react-native';
+import React, { useState } from "react";
+import { StyleSheet, View, Image, TextInput, TouchableOpacity, Text } from 'react-native';
 import AsyncStorage from "@react-native-community/async-storage";
 import logo from '../assets/logo.png';
 
-var { height, width } = Dimensions.get("window");
-
 export default function LoginScreen({ navigation: { navigate, setOptions } }) {
     const [isLoggedin, setLoggedinStatus] = useState(false);
-    const [userData, setUserData] = useState(null);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
@@ -48,7 +45,6 @@ export default function LoginScreen({ navigation: { navigate, setOptions } }) {
                         token_type: responseData.token_type,
                         expires_in: responseData.expires_in
                     };
-                    setUserData(token);
                     setLoginLocal(token);
                     console.log(token.access_token);
                     navigate("Partners");
@@ -65,7 +61,6 @@ export default function LoginScreen({ navigation: { navigate, setOptions } }) {
 
     const logout = () => {
         setLoggedinStatus(false);
-        setUserData(null);
         removeLoginLocal();
         setOptions({
             title: 'Login'
