@@ -50,7 +50,8 @@ export default function CreatePartnerScreen({ navigation: { navigate } }, props)
                     onChangeText={(value) => setTitle(value)}
                     value={title}
                 />
-                <View style={styles.buttonView}>
+            </View>
+            <View style={styles.buttonView}>
                     <TouchableOpacity style={styles.loginButton}
                         onPress={() => {
                             createPartner();
@@ -60,7 +61,6 @@ export default function CreatePartnerScreen({ navigation: { navigate } }, props)
                         <Text style={{ color: "white", fontSize: 12, fontWeight: "bold" }}>Crea</Text>
                     </TouchableOpacity>
                 </View>
-            </View>
         </View>
     );
 }
@@ -74,13 +74,13 @@ const styles = StyleSheet.create({
         backgroundColor: 'white'
     },
     formInputView: {
-        flex: 2,
+        flex: 1,
         width: "100%",
         alignItems: "center",
-        justifyContent: "flex-start",
+        justifyContent: "center",
     },
     formInput: {
-        height: '10%',
+        height: '20%',
         width: '75%',
         backgroundColor: "white",
         borderColor: "#bababa",

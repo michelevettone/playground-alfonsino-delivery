@@ -5,23 +5,23 @@ import logo from '../assets/logo.png';
 
 var { height, width } = Dimensions.get("window");
 
-export default function LoginScreen({ navigation: { navigate } }) {
+export default function LoginScreen({ navigation: { navigate, setOptions } }) {
     const [isLoggedin, setLoggedinStatus] = useState(false);
     const [userData, setUserData] = useState(null);
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
 
-    
+
     const setLoginLocal = async (loginData) => {
         try {
-          await AsyncStorage.setItem(
-            "loginData",
-            JSON.stringify(loginData)
-          ).then(() => console.log("callback"));
+            await AsyncStorage.setItem(
+                "loginData",
+                JSON.stringify(loginData)
+            ).then(() => console.log("callback"));
         } catch (err) {
-          console.log(err);
+            console.log(err);
         }
-      };
+    };
 
     const login = async () => {
         var data = JSON.stringify({
@@ -36,6 +36,7 @@ export default function LoginScreen({ navigation: { navigate } }) {
                     headers: {
                         Accept: "application/json",
                         "Content-Type": "application/json",
+                        "Cache-Control": "no-cache"
                     },
                     body: data,
                 }
@@ -49,47 +50,87 @@ export default function LoginScreen({ navigation: { navigate } }) {
                     };
                     setUserData(token);
                     setLoginLocal(token);
-                    setLoggedinStatus(true);
                     console.log(token.access_token);
                     navigate("Partners");
+                    setOptions({
+                        title: 'Logout'
+                    });
+                    setLoggedinStatus(true);
                 })
                 .catch((e) => console.log(e));
         } catch (error) {
             console.error(error);
         }
     };
-    
+
+    const logout = () => {
+        setLoggedinStatus(false);
+        setUserData(null);
+        removeLoginLocal();
+        setOptions({
+            title: 'Login'
+        });
+    };
+
+    const removeLoginLocal = async () => {
+        await AsyncStorage.clear();
+        console.log("cleared");
+    };
+
     return (
-        <View style={styles.container}>
-            <Image source={logo} style={styles.logo}></Image>
-            <View style={styles.formInputView}>
-                <TextInput
-                    placeholder={"Indirizzo Email"}
-                    style={styles.formInput}
-                    underlineColor={"#fff"}
-                    underlineColorAndroid={"#fff"}
-                    onChangeText={(value) => setEmail(value)}
-                    value={email}
-                    keyboardType={"email-address"}
-                />
-                <TextInput
-                    placeholder={"Password"}
-                    style={styles.formInput}
-                    underlineColor={"#fff"}
-                    underlineColorAndroid={"#fff"}
-                    onChangeText={(value) => setPassword(value)}
-                    secureTextEntry={true}
-                />
+        !isLoggedin ? (
+            <View style={styles.container}>
+                <Image source={logo} style={styles.logo}></Image>
+                <View style={styles.formInputView}>
+                    <TextInput
+                        placeholder={"Indirizzo Email"}
+                        style={styles.formInput}
+                        underlineColor={"#fff"}
+                        underlineColorAndroid={"#fff"}
+                        onChangeText={(value) => setEmail(value)}
+                        value={email}
+                        keyboardType={"email-address"}
+                    />
+                    <TextInput
+                        placeholder={"Password"}
+                        style={styles.formInput}
+                        underlineColor={"#fff"}
+                        underlineColorAndroid={"#fff"}
+                        onChangeText={(value) => setPassword(value)}
+                        secureTextEntry={true}
+                    />
+                </View>
+                <View style={styles.buttonView}>
+                    <TouchableOpacity style={styles.loginButton}
+                        onPress={() => {
+                            login();
+                        }}>
+                        <Text style={{ color: "white", fontSize: 12, fontWeight: "bold" }}>Effettua il login</Text>
+                    </TouchableOpacity>
+                </View>
             </View>
-            <View style={styles.buttonView}>
-                <TouchableOpacity style={styles.loginButton}
-                    onPress={() => {
-                        login();
-                    }}>
-                    <Text style={{ color: "white", fontSize: 12, fontWeight: "bold" }}>Effettua il login</Text>
-                </TouchableOpacity>
-            </View>
-        </View>
+        ) : (
+                <View style={styles.container}>
+                    <Image source={logo} style={styles.logo}></Image>
+                    <View style={styles.emailView}>
+                        <Text>{email}</Text>
+                    </View>
+                    <View style={styles.logoutButtonView}>
+                        <TouchableOpacity style={styles.loginButton}
+                            onPress={() => {
+                                navigate("Partners");
+                            }}>
+                            <Text style={{ color: "white", fontSize: 12, fontWeight: "bold" }}>Vai ai Partners</Text>
+                        </TouchableOpacity>
+                        <TouchableOpacity style={styles.logoutButton}
+                            onPress={() => {
+                                logout();
+                            }}>
+                            <Text style={{ color: "white", fontSize: 12, fontWeight: "bold" }}>Effettua il logout</Text>
+                        </TouchableOpacity>
+                    </View>
+                </View>
+            )
     );
 }
 
@@ -113,6 +154,12 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "flex-start",
     },
+    emailView: {
+        flex: 1,
+        width: "100%",
+        alignItems: "center",
+        justifyContent: "flex-start",
+    },
     formInput: {
         height: '10%',
         width: '75%',
@@ -129,13 +176,28 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
     },
+    logoutButtonView: {
+        flex: 2,
+        width: "100%",
+        alignItems: "center",
+        justifyContent: "center",
+    },
     loginButton: {
         backgroundColor: "#007dfe",
         borderRadius: 2,
         width: "75%",
         height: undefined,
         aspectRatio: 7,
-        marginVertical: 10,
+        justifyContent: "center",
+        alignItems: "center",
+        marginBottom: 20
+    },
+    logoutButton: {
+        backgroundColor: "red",
+        borderRadius: 2,
+        width: "75%",
+        height: undefined,
+        aspectRatio: 7,
         justifyContent: "center",
         alignItems: "center",
     },

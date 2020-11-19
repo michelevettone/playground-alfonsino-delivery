@@ -12,11 +12,10 @@ export default function PartnersScreen({ navigation: { navigate } }, props) {
     const [partnersData, setPartnersData] = useState("");
     const [bearerToken, setBearerToken] = useState("");
 
-
     const fetchPartnerList = () => {
         axios
-            .get("https://playground.alfonsino.delivery/api/partners?per_page=10", {
-                headers: { "Authorization": "Bearer " + bearerToken },
+            .get("https://playground.alfonsino.delivery/api/partners", {
+                headers: { "Authorization": "Bearer " + bearerToken, "Cache-Control": "no-cache" }
             })
             .then((response) => {
                 setPartnersData(response.data);
@@ -39,7 +38,9 @@ export default function PartnersScreen({ navigation: { navigate } }, props) {
             }
         });
     }
-
+    const keyExtractor = (item, index) => {
+        return index.toString();
+    };
 
     useEffect(() => {
         getData();
@@ -51,6 +52,7 @@ export default function PartnersScreen({ navigation: { navigate } }, props) {
             <FlatList
                 style={{ width: '100%', backgroundColor: 'white', marginTop: 10 }}
                 data={partnersData}
+                keyExtractor={keyExtractor}
                 renderItem={({ item }) => (
                     <TouchableOpacity
                         onPress={() => { console.log('Partner Clicked') }}>
@@ -69,7 +71,7 @@ export default function PartnersScreen({ navigation: { navigate } }, props) {
             />
             <TouchableOpacity style={styles.addButton}
                 onPress={() => {
-                    navigate("CreaPartner", {token: bearerToken});
+                    navigate("CreaPartner", { token: bearerToken });
                 }}>
                 <Icon name='add' size={38} />
             </TouchableOpacity>
